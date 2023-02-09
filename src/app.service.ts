@@ -19,22 +19,24 @@ export class AppService {
 
   async botInit() {
     
-    const telebotToken = this.configService.get<string>('TELE_KEY');
+    const telebotToken = '5960122402:AAGAOqH61j8l5hYnb5Gz-u1zJanyhiHUJIg';
     
     const bot = new Telegraf<Context>(telebotToken);
   
     const aiSetting = new Configuration({
-      apiKey: process.env.OPENAI_KEY,
+      apiKey: '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',
     });
 
     const openai = new OpenAIApi(aiSetting);
     
     bot.use(async (ctx, next) => {
 
+      const reciveTime = new Date().getTime()
       this.logger.warn('Receive content:', ctx.update['message']?.['text']);
 
       await next();
-
+      const ms = new Date().getTime() - reciveTime;
+      this.logger.log('Response time: %sms', ms);
     });
 
     bot.command('/gpt', async (ctx) => {
